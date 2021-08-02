@@ -18,15 +18,19 @@ i.icon-white {
 	
     $vcategoria	= $categoria->CATEGO_N_ID;
 	
-   //$vcategoria2 = $categoria->CATEGO_N_ID;
+	if($vcategoria==3)
+	{
+		 $vdisa="";
+	}else
+	{
+		$vdisa="disabled";
+	}
 	
 	
 	
 	if($vcategoria==7  or $vcategoria==4 or $vcategoria==2 or $vcategoria==16 ) {
-		
 		$vcategoria=1;
 	}		
-	
 ?>
 
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
@@ -51,8 +55,6 @@ i.icon-white {
 </nav>
 
 <div class="row">
-	
-
 <input type="hidden" id="canttra" name="canttra" value="0" />
 <input type="hidden" id="htra" name="htra" value="0" />
 <input type="hidden" id="cantpro" name="cantpro" value="0" />
@@ -64,7 +66,7 @@ i.icon-white {
   <li class="tab col s2"><a class="active" href="#swipe-1">TRABAJADORES</a></li>
   <li class="tab col s3"><a href="#swipe-2">PROVEEDORES/TRANSPORTISTAS</a></li>
 </ul>
-<!--<div id="swipe-1" class="col s12" style="height:1000px">-->
+
 <div id="swipe-1" class="col s12" style="height:1000px">
 <!--CONTENIDO1-->
 <div class="section container center" style="padding-top: 0px">
@@ -145,12 +147,10 @@ i.icon-white {
  	<a class="btn-small" onclick="MovimientoPersona(1,1)"   target="_blank"><i class="material-icons">file_download</i></a>
  </div>
  -->
-<?php } ?>
-
- 
+<?php } ?> 
 						
 <div class="input-field col s1">
-<a class="btn-small red" href="<?= base_url()?>ingreso/nuevoalterno" id="addtra" ><i class="material-icons">add</i></a>
+<a class="btn-small red" href="<?= base_url()?>ingreso/nuevoalterno" id="addtra" <?php echo $vdisa; ?> ><i class="material-icons">add</i></a>
 </div>
 
 <div class="input-field col s2 left-align right" style="font-size: 12px;">
@@ -283,7 +283,7 @@ Registros:
 		
 		
 <div class="input-field col s1">
-<a class="btn-small red" href="<?= base_url()?>ingreso/nuevo" id="addpro" ><i class="material-icons">add</i></a>
+<a class="btn-small red" href="<?= base_url()?>ingreso/nuevo" id="addpro" <?php echo $vdisa; ?> ><i class="material-icons">add</i></a>
 </div>
 
 
@@ -907,16 +907,10 @@ if(categoria==7 || categoria==4 || categoria==2 || categoria==16 )
 //console.log(categoria);
 //1
 
-if(categoria ==1)
-{
-BuscarTra(2,1,0);
-BuscarPro(2,2,0);	
-}
-else
-{
 BuscarTra(1,1,0);
 BuscarPro(1,2,0);
-}
+
+
 ListadoCliente(1,1);
 ListadoCliente(0,2);
 
