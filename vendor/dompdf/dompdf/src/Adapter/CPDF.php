@@ -190,7 +190,9 @@ class CPDF implements Canvas
         }
 
         if (mb_strtolower($orientation) === "landscape") {
-            [$size[2], $size[3]] = [$size[3], $size[2]];
+			$size[2] = $size[3];
+			$size[3] = $size[2];
+            //[$size[2], $size[3]] = [$size[3], $size[2]];
         }
 
         $this->_dompdf = $dompdf;
@@ -838,7 +840,7 @@ class CPDF implements Canvas
      */
     public function image($img, $x, $y, $w, $h, $resolution = "normal")
     {
-        [$width, $height, $type] = Helpers::dompdf_getimagesize($img, $this->get_dompdf()->getHttpContext());
+        list( $width, $height, $type ) = Helpers::dompdf_getimagesize($img, $this->get_dompdf()->getHttpContext());
 
         $debug_png = $this->_dompdf->getOptions()->getDebugPng();
 

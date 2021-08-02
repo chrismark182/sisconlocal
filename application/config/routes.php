@@ -14,6 +14,8 @@ $route['dashboard'] = 'C_dashboard';
 $route['login']='C_login';
 $route['login/create'] = 'C_login/create';
 $route['login/login'] = 'C_login/userpass';
+//$route['login/cambiosede'] = 'C_login/cambiosede';
+$route['login/(:num)/cambiosede'] = function ($id){return 'C_login/cambiosede/'.$id;};
 $route['logout'] = 'C_login/logout';
 
 //Acuerdos
@@ -170,6 +172,7 @@ $route['api/tarifas'] = function (){return 'C_api/tarifas'; };
 $route['api/ordenservicio'] = function (){return 'C_api/ordenservicio'; };
 $route['api/execsp'] = function (){return 'C_api/execsp'; };
 $route['api/uploadfile'] = function (){return 'C_api/uploadfile'; };
+$route['api/crear'] = function (){return 'C_api/crearC'; };
 
 $route['sistema/sync'] = function (){return 'C_system/sync'; };
 $route['sistema/log'] = function (){return 'C_system/log'; };
@@ -192,12 +195,26 @@ $route['bloqueos/nuevo'] = 'C_bloqueo/nuevo';
 $route['bloqueos/bloquear'] = 'C_bloqueo/crea_bloqueo';
 
 //ingreso
+//$route['ingreso'] = 'C_ingreso';
 $route['ingreso'] = 'C_ingreso';
+
+$route['ingreso/prueba'] = 'C_ingreso/prueba';//este solo es prueba
+//$route['ingreso/prueba'] = 'C_ingreso/prueba';//este solo es prueba
+$route['ingreso/prueba2'] = 'C_ingreso/prueba2';//este solo es prueba
+
+
+
+
 $route['ingreso/nuevo'] = 'C_ingreso/nuevo';
+$route['ingreso/nuevoalterno'] = 'C_ingreso/nuevoalterno';
+$route['ingreso/nuevotrabajador'] = 'C_ingreso/nuevotrabajador';
+$route['ingreso/crear'] = 'C_ingreso/crearC';
 $route['ingreso/(:num)/eliminar'] = function ($id){return 'C_ingreso/delete/'.$id;};
 $route['ingreso/(:num)/confirmar_ingreso'] = function ($id){return 'C_ingreso/confirmar_ingreso/'.$id;};
 $route['salida/(:num)/confirmar_salida'] = function ($id){return 'C_ingreso/confirmar_salida/'.$id;};
-$route['ingreso/reporte/(:num)'] = function ($id){return 'C_ingreso/reporte/'.$id;};;
+$route['ingreso/reporte/(:num)'] = function ($id){return 'C_ingreso/reporte/'.$id;};
+$route['ingreso/exportar'] = 'C_ingreso/exportar2excel';
+$route['ingreso/exportaraqpcallao'] = 'C_ingreso/exportaraqpcallao';
 
 //persona
 $route['personas'] = 'C_persona';
@@ -222,3 +239,37 @@ $route['revision_doc/(:num)/rechazar'] = function ($id){return 'C_revision_doc/r
 
 //Reasignacion documento
 $route['reasignar_doc'] = 'C_reasignar_doc';
+
+//SOLICITUD ABASTECIMIENTO
+$route['solicitudabastecimiento'] = 'C_solicitudabastecimiento';
+$route['solicitudabastecimiento/contador'] = 'C_solicitudabastecimiento/contador';
+$route['solicitudabastecimiento/nuevo'] = 'C_solicitudabastecimiento/nuevo';
+$route['solicitudabastecimiento/crear'] = 'C_solicitudabastecimiento/crear';
+$route['solicitudabastecimiento/do_upload'] = 'C_solicitudabastecimiento/do_upload';
+$route['solicitudabastecimiento/validate'] = 'C_solicitudabastecimiento/validate';
+$route['solicitudabastecimiento/autorizar'] = 'C_solicitudabastecimiento/autorizar';
+
+//INFO
+$route['info/validate'] = 'C_info/validate';
+$route['info/updateprecio'] = 'C_info/updateprecio';
+$route['info/edit'] = 'C_info/edit';
+$route['info/conprecio'] = 'C_info/conprecio';
+$route['info/pagoins'] = 'C_info/pagoins';
+$route['info/detpagolist'] = 'C_info/detpagolist';
+$route['info/detcullist'] = 'C_info/detcullist';
+$route['info/aprobarsolicitud'] = 'C_info/aprobarsolicitud';
+$route['info/reportlist'] = 'C_info/reportlist';
+$route['info/reporteins'] = 'C_info/reporteins';
+$route['info/finalrepor'] = 'C_info/finalrepor';
+$route['info/aprobarpago'] = 'C_info/aprobarpago';
+
+//Reporte Excel
+$route['movimientopersona/reporte'] = 'C_MovimientoPersonaExcel/exportar2excel';
+
+//ReportesVisitantes
+$route['reportevisitantes'] = 'C_reportevisitantes';
+$route['info/reporte'] = 'C_info/reporte';
+
+//Importar
+$route['importaralquileres'] = 'C_importaralquileres';
+$route['importaralquileres/import'] = 'C_importaralquileres/import';

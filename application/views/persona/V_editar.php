@@ -8,7 +8,7 @@
 </nav>
 
 <div class="section container center">
-    <form action="<?= base_url() ?>personas/<?= $personas->EMPRES_N_ID ?>/<?= $personas->PERSON_N_ID ?>/actualizar" method="post">
+    <form action="<?= base_url() ?>personas/<?= $personas->EMPRES_N_ID ?>/<?= $personas->PERSON_N_ID ?>/actualizar" id="form" method="post">
         <div class="row">
             <div class="input-field col s12 m6 l4">
                 <select id="cliente" name="cliente" disabled>
@@ -79,24 +79,24 @@
             </div>
             
             <div class="input-field col s12">
-                <input class="btn-small" type="submit" value="Guardar">
+                <input class="btn-small" type="button" id="btn_guardar" value="Guardar">
             </div>
         </div>
-    </form>
+    <!--</form>-->
 </div>
 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-        console.log("cargo pantalla")
+        console.log("cargo pantalla");
         var btn_guardar = document.getElementById("btn_guardar"); 
         btn_guardar.addEventListener("click", validarUpload, false); 
     });
-
+	
     async function validarUpload()
     {
         if(archivo.value != ''){
-			await uploadFile('archivo')
+			await uploadFile('archivo');
 			document.getElementById('form').submit();
         }else{
             document.getElementById('form').submit();

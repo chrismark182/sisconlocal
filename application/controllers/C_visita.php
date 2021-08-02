@@ -27,8 +27,11 @@ class C_visita extends CI_Controller {
 
 	public function index()
 	{
-
-        $sql = "Exec VISITA_LIS 0,0";        
+		
+		$empresa=$this->data['empresa']->EMPRES_N_ID;
+		
+		
+        $sql = "Exec VISITA_LIS ".$empresa.",0";        
         $this->data['visitas'] = $this->M_crud->sql($sql); 
         $this->load->view('visita/V_index', $this->data);
         

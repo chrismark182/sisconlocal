@@ -43,7 +43,7 @@
                 <label class="active" for="descripcion">Descripción</label> 
             </div>
             <div class="input-field col s12 m6 l6">
-                <input id="metro" type="number" min="1" maxlength="9" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="metro" class="validate">
+                <input id="metro" type="number" step="0.01" min="1" maxlength="9" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="metro" class="validate">
                 <label class="active" for="metro">Area (m2)</label> 
             </div>
             <div class="input-field col s12">

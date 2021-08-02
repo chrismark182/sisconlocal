@@ -45,6 +45,7 @@
                 <th class="center-align">CLIENTE</th>
                 <th class="center-align">PROVE.</th>
                 <th class="center-align">TRANSP.</th>
+				<th class="center-align">OTRO</th>
                 <th class="center-align">EDITAR</th>
                 <th class="center-align">ELIMINAR</th>
 
@@ -122,6 +123,7 @@
                 $escliente='';
                 $esproveedor='';
                 $estransportista='';
+				$otro='';
                if(data[index].CLIENT_C_ESCLIENTE==1){
                 $escliente = '<i class="material-icons">done</i>'
                }
@@ -132,7 +134,11 @@
                if(data[index].CLIENT_C_ESTRANSPORTISTA==1){
                 $estransportista = '<i class="material-icons">done</i>'
                }
-
+			   
+			   if(data[index].CLIENT_C_OTRO==1){
+                $otro = '<i class="material-icons">done</i>'
+               }				
+				
                 $('#resultados').append(`
                                         
                                             <tr>
@@ -143,6 +149,7 @@
                                                 <td class="center-align">${$escliente}</td>
                                                 <td class="center-align">${$esproveedor}</td>
                                                 <td class="center-align">${$estransportista}</td>
+                                                <td class="center-align">${$otro}</td>
                                                 <td class="center-align">
                                                     <a  href="<?= base_url() ?>cliente/${data[index].EMPRES_N_ID}/${data[index].CLIENT_N_ID}/editar">
                                                         <i class="material-icons">edit</i>

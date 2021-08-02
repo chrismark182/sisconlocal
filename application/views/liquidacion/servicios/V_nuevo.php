@@ -1,7 +1,12 @@
 <?php 
     $fechaDesde = new DateTime();
-    $fechaDesde->modify('first day of this month');    
-    $fechaHasta = new DateTime();
+    $fechaDesde->modify('first day of this month');
+    
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);
+    //$fechaHasta = new DateTime();
 ?>
 
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
@@ -77,6 +82,7 @@
             <tr>          
                 <th class="center-align"></th>
                 <th class="center-align">ORDEN SERV.</th>
+				<th class="center-align">CLIENTE</th>
                 <th class="left-align">SERVICIO</th>
                 <th class="left-align">NUM. FISICO</th>
                 <th class="center-align">FECHA</th>
@@ -120,8 +126,8 @@
         var sede = document.getElementById("sede").value;
         var moneda = document.getElementById("moneda").value;
 
-            if(cliente != '' && sede != '' && moneda != '')
-            {
+            //if(cliente != '' && sede != '' && moneda != '')
+            //{
                 $('.preloader-background').css({'display': 'block'});
                 cliente = cliente.split('-');
 
@@ -158,12 +164,13 @@
                                                         <td class="center-align">
                                                             <p>
                                                                 <label>
-                                                                    <input type="checkbox" class="check" value="${element.ORDSER_N_ID}"/>
+                                                                    <input type="checkbox" class="check" value="${element.CLIENT_N_ID}-${element.SEDE_N_ID}-${element.ORDSER_N_ID}"  name="liqservicio"/>
                                                                     <span></span>
                                                                 </label>
                                                             </p>
                                                         </td>
                                                         <td class="center-align">${element.ORDSER_N_ID}</td>
+                                                        <td class="center-align">${element.CLIENT_C_RAZON_SOCIAL}</td>
                                                         <td class="left-align">${element.SERVIC_C_DESCRIPCION}</td>
                                                         <td class="left-align">${element.ORDSER_C_NUMERO_FISICO}</td>
                                                         <td class="center-align">${element.ORDSER_C_FECHA}</td>
@@ -185,33 +192,77 @@
                     $('.preloader-background').css({'display': 'none'});    
 
                 });
-            }else{
-                M.toast({html: 'Debe elegir un cliente, sede y moneda', classes: 'rounded'});
-                $('.preloader-background').css({'display': 'none'});    
-            }
+            //}
+			//else{
+            //    M.toast({html: 'Debe elegir un cliente, sede y moneda', classes: 'rounded'});
+            //    $('.preloader-background').css({'display': 'none'});    
+            //}
     }
 
     function liquidar()
     {
+		
+		//console.log("ingreso");
 
         var cliente = document.getElementById("cliente").value;
             cliente = cliente.split('-');
-        
+		
+
+		//CODIGO PRUEBA
+		var vliqservicio = [];
+		
+		//Recorremos todos los input checkbox con name = Colores y que se encuentren "checked"
+		$("input[name='liqservicio']:checked").each(function ()
+		{
+		
+		//Mediante la función push agregamos al arreglo los values de los checkbox
+		vliqservicio.push(($(this).attr("value")));
+		});
+		
+		// Utilizamos console.log para ver comprobar que en realidad contiene algo el arreglo
+		//console.log("1");
+		//console.log(vliqservicio);
+		//console.log(vliqservicio.length);
+		//FIN CODIGO PRUEBA
+				
+		//return false;
+			
+			
         var situacion = 1;
-        if(cliente[1] == 1){ situacion = 0 }
+        //if(cliente[1] == 1){ situacion = 0 }
+		//situacion = 0
 
         var checados = $('.check:checked')
         console.log('Checados:' + checados.length);
+		
         if(checados.length > 0)
         {
+			
+			for (let i = 0; i < checados.length; i++)
+			{
+				
+			//console.log("seleccionados" + i );
+			//console.log(vliqservicio[i]);
+			
+			//return false;
+			
+			
+			vservic = vliqservicio[i].split('-');
+			
+			//console.log(vservic[0]);
+			//console.log(vservic[1]);
+			//console.log(vservic[2]);
+			//return false;
+						
             $('.preloader-background').css({'display': 'block'});
             var url =  '<?= base_url() ?>liq_servicios/nuevo/grabar_cabecera';
             var data = {
                         empresa: <?= $empresa->EMPRES_N_ID ?>, 
-                        cliente: cliente[0],
-                        sede: document.getElementById("sede").value,
+                        cliente: vservic[0],
+                        sede: vservic[1],
                         situacion: situacion, 
-                        usuario: <?= $this->data['session']->USUARI_N_ID ?>
+                        usuario: <?= $this->data['session']->USUARI_N_ID ?>,
+						ordenservicio: vservic[2]
                         };
             
             
@@ -228,33 +279,46 @@
             .then(function(data) 
             {
                 if(data.length>0){
-                    insertarDetalles(data[0].LIQCAB_N_ID, checados)    
+                    insertarDetalles(data[0].LIQCAB_N_ID,data[0].CLIENTE_N_ID,data[0].SEDE_N_ID,data[0].ORDENSERVICIO_N_ID)    
                 }
                 else{
                     M.toast({html: 'No se encontraron resultados', classes: 'rounded'});
                 }   
 
             });
-        }else{
+        
+		}//fin for
+		
+		}// fin if		
+		else{
             M.toast({html: 'Debe elegir al menos una orden de servicio', classes: 'rounded'});
         }
     }
 
-    async function insertarDetalles(liquidacion, checados)
+    //async function insertarDetalles(liquidacion, checados)
+	async function insertarDetalles(liquidacion, cliente_n_id,sede_id,ordenservicio_n_id)
     {
-        $('.preloader-background').css({'display': 'block'});
+				
+		//console.log(liquidacion);
+		//console.log(cliente_n_id);
+		//console.log(sede_id);
+		//console.log(ordenservicio_n_id);
+		//return false;
+        
+		
+		$('.preloader-background').css({'display': 'block'});
         
         var situacion = 1;
         
         var url =  '<?= base_url() ?>liq_servicios/nuevo/grabar_detalle';
-        for (let index = 0; index < checados.length; index++) {
-            console.log('ejecutando vuelta ' + (index+1))
-            const element = checados[index];
+        //for (let index = 0; index < checados.length; index++) {
+            //console.log('ejecutando vuelta ' + (index+1))
+            //const element = checados[index];
 
             var data = {
                         empresa: <?= $empresa->EMPRES_N_ID ?>, 
                         liquidacion: liquidacion,
-                        orden: element.value,
+                        orden: ordenservicio_n_id,
                         usuario: <?= $this->data['session']->USUARI_N_ID ?>
                         };
                     
@@ -275,10 +339,11 @@
             }).catch(function(error) {
                 console.log('Hubo un problema con la petición Fetch:' + error.message);
             });
-        }
+        //}
         M.toast({html: 'Liquidación generada correctamente', classes: 'rounded'});
         $('.preloader-background').css({'display': 'none'});    
-        window.location.href = "<?= base_url() ?>liq_servicios?li=" + liquidacion;
+        //window.location.href = "<?= base_url() ?>liq_servicios?li=" + liquidacion;
+        window.location.href = "<?= base_url() ?>liq_servicios";
     }
 </script>
 

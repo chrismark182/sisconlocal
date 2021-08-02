@@ -12,6 +12,14 @@
 	<script src="<?= base_url() ?>assets/js/materialize.js"></script>
 	<script>var base_url = '<?php echo base_url() ?>';</script>
 	<script src="<?= base_url() ?>assets/js/main.js?v=<?= time() ?>"></script>
+
+
+	<!--AGREGADO-->
+	<!--<script src="<?= base_url() ?>assets/js/funciones.js"></script>-->
+	<script src="<?= base_url() ?>assets/js/moment.js"></script>
+	<!---->
+	
+	
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			$('select').formSelect();
@@ -33,9 +41,17 @@
 				M.toast({html: message, classes: 'rounded'});
 			}
 			status()
+		
+		//console.log("pruebas " + document.getElementsByClassName("select-dropdown").length)
+		
+		
+		
+		
+		
 		});
 		async function status()
 		{
+			/*
 			var url = '<?= base_url() ?>sistema/log';
 			var urlRevisar = '<?= base_url() ?>sistema/revisar';
 			var data = {};
@@ -75,6 +91,7 @@
 					sync();
 				}
             });
+			*/
 		}
 		async function sync()
 		{
@@ -124,6 +141,24 @@
 		{
 			color: #039be5;
 		}
+		
+		
+		ul#nav-mobile:first-child input.select-dropdown
+		{
+			width: 210px !important;
+			font-size: 14px !important;
+			color:white;
+		}
+		
+		/*
+		input.select-dropdown
+		{
+		width: 210px !important;
+		font-size: 14px !important;
+		color:white;
+		}
+		*/
+		
 	</style>
 </head>
 <body>
@@ -144,11 +179,17 @@
             </div>
         </div>
     </div>
+	<!--<nav class="blue-grey darken-1" style="padding: 0 1em;">-->
 	<nav class="blue-grey darken-1" style="padding: 0 1em;">
-    	<div class="nav-wrapper">
+    	<!--<div class="nav-wrapper">-->
+    	<div class="nav-wrapper row">
 		<?php if($this->session->userdata('logged_in')): ?>
 		<?php endif; ?>
-			<a href="<?= base_url() ?>" class="brand-logo">SISCON</a>
+				
+			<!--<a href="<?= base_url() ?>" class="brand-logo">SISCON </a>-->
+
+			<!--Agregado-->
+			
 			<!-- Dropdown Structure -->
 			<ul id="dropUsuario" class="dropdown-content">
 				<li><a href="<?= base_url() ?>usuario/cambio_pass">Cambiar Contraseña</a></li>
@@ -176,8 +217,36 @@
 
 
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
-				<?php if($this->session->userdata('logged_in')): ?>
-					<?php if(!empty($accesos['padres'])): ?>
+			<?php if($this->session->userdata('logged_in')):
+	
+			$vcategoria=$this->session->userdata('categoria');
+	
+			//if($categoria->CATEGO_N_ID;)$session->USUARI_N_ID
+			//f($vcategoria==1 or $vcategoria==3 ){
+			if($vcategoria==1 or $vcategoria==7 or $vcategoria==15 or $vcategoria==16  ){
+			?>
+			<li>
+			<select id="selectsector" name="selectsector" class="selectsector" >
+			<?php
+			$empresa=$this->session->userdata('empresa_id');
+			
+			foreach ($listadosector as $listado): 
+			
+			if($listado->EMPRES_N_ID == $empresa){
+				$selected="selected";
+			}else
+			{
+				$selected="";
+			}
+			
+			?>
+			<option value="<?= $listado->EMPRES_N_ID ?>"  <?= $selected ?> ><?= $listado->EMPRES_C_RAZON_SOCIAL ?></option>
+			<?php endforeach; ?>
+			 </select>
+			<!--<label>Sector</label>-->
+			</li>	
+			<?php } ?>
+			<?php if(!empty($accesos['padres'])): ?>
 						<?php foreach($accesos['padres'] as $acceso): ?>
 							<?php if($acceso->MENU_RUTA == '#'): ?>
 								<li><a class="dropdown-trigger" href="#!" data-target="<?= $acceso->MENU_ID ?>"><?= $acceso->MENU_DESCRIPCION ?><i class="material-icons right">arrow_drop_down</i></a></li>

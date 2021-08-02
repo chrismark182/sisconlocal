@@ -1,7 +1,13 @@
 <?php 
     $fechaDesde = new DateTime();
-    $fechaDesde->modify('first day of this month');    
-    $fechaHasta = new DateTime();
+    $fechaDesde->modify('first day of this month');  
+	
+	
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);
+    //$fechaHasta = new DateTime();
 ?>
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
     <div class="nav-wrapper">

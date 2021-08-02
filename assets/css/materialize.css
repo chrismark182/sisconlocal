@@ -8388,6 +8388,7 @@ input[type=range]::-ms-thumb {
   bottom: 68px;
 }
 
+
 .carousel.carousel-slider .carousel-item {
   width: 100%;
   height: 100%;
@@ -9083,3 +9084,17 @@ input[type=range]::-ms-thumb {
     margin-top: 1.2rem;
   }
 }
+
+/*Borrador*/
+/*.tabs-content.carousel .carousel-item { height:auto; }*/
+/*
+.tabs-content.carousel.carousel-slider .carousel-item.active{
+    position: relative;
+}
+*/
+/*
+.tabs-content {
+    height: auto !important;
+    min-height: 100%;
+}
+*/

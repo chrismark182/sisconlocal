@@ -14,6 +14,12 @@ class C_menu extends CI_Controller {
             $this->data['accesos'] = $this->esandexaccesos->accesos();
             $empresa = $this->M_crud->read('empresa', array('EMPRES_N_ID' => $this->session->userdata('empresa_id')));
             $this->data['empresa']=$empresa[0];
+			//$empresa=$this->data['empresa']->EMPRES_N_ID;
+			//$this->data['empresas'] = $this->M_crud->sql("EXEC EMPRESA_LIS 0");
+			
+			//$empresas = $this->M_crud->sql('Exec EMPRESA_LIS 0');
+			//$this->data['empresas'] = $empresas;
+			
 		else:
 			redirect(base_url(),'refresh');
 		endif;
@@ -24,7 +30,12 @@ class C_menu extends CI_Controller {
 	}
 
     public function index() 
-	{           
+	{          
+		//$empresas = $this->M_crud->sql('Exec EMPRESA_LIS 0');
+		//$this->data['empresas'] = $empresas;
+		//$empresa=$this->data['empresa']->EMPRES_N_ID;
+		//$this->data['empresas'] = $this->M_crud->sql("EXEC EMPRESA_LIS 0");
+		//$this->data['empresas'] = $this->M_crud->sql("EXEC EMPRESA_LIS "  . $empresa);
         $sql = "Exec MENU_LIS 0, 0";
         $this->data['menus'] = $this->M_crud->sql($sql);  
         $this->load->view('menu/V_index', $this->data);

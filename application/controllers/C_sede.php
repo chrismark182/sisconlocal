@@ -49,7 +49,7 @@ class C_sede extends CI_Controller {
 	{
 
         $data = json_decode(file_get_contents('php://input'), true);
-        $sql= "Exec SEDE_INS {$data['empresa']}, '{$data['descripcion']}', '{$data['direccion']}', '{$data['abreviatura']}', {$data['usuario']}";
+        $sql= "Exec SEDE_INS {$data['empresa']}, '{$data['descripcion']}', '{$data['direccion']}', '{$data['abreviatura']}', {$data['usuario']},{$data['metrajetotal']}";
         $query = $this->M_crud->sql($sql);
         echo json_encode($query, true);
         
@@ -58,13 +58,16 @@ class C_sede extends CI_Controller {
     {
         if( trim($this->input->post('descripcion')) != '' &&
             trim($this->input->post('direccion')) != '' &&
-            trim($this->input->post('abreviatura')) != ''):
+            trim($this->input->post('abreviatura')) != '' &&
+            trim($this->input->post('metrajetotal')) != ''
+			):
         $sql = "Exec SEDE_UPD "  .$empresa. ","
                                 .$id. ",'"
                                 .$this->input->post('descripcion'). "','"
                                 .$this->input->post('direccion')."','"
                                 .$this->input->post('abreviatura')."',"
-                                .$this->data['session']->USUARI_N_ID;
+                                .$this->data['session']->USUARI_N_ID.",'"
+								.$this->input->post('metrajetotal')."'";
                                 
         $this->M_crud->sql($sql);      
         $this->session->set_flashdata('message','Datos actualizados correctamente');

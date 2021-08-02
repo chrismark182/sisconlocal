@@ -1,8 +1,22 @@
+<style>
+
+#modalver {width: 30% !important ;height: 65% !important ; }
+
+
+</style> 
+
 <?php 
     $fechaDesde = new DateTime();
     //$fechaDesde->modify('-1 month');
     $fechaDesde->modify('first day of this month');    
-    $fechaHasta = new DateTime();
+    
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);
+	
+    //$fechaHasta = new DateTime();
+	//$fechaHasta = new DateTime();
 ?>
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
     <div class="nav-wrapper">
@@ -27,27 +41,33 @@
  <div class="section container center" style="padding-top: 0px">
     <div class="row" style="margin-bottom: 0px">
         <form action="<?= base_url() ?>clientes" method="post">
-            <div class="input-field col s12 m6 l4">
-                <input id="acuerdo_id" maxlength="11" type="text" class="validate">
-                <label class="active" for="acuerdo_id">ID Acuerdo</label> 
+		
+            <div class="input-field col s12 m6 l4">	
+				<input id="razon_social" maxlength="50" type="text" name="razon_social"  class="autocomplete validate" autocomplete="off" >
+                <label class="active" for="razon_social">Cliente</label> 		
             </div>
-            <div class="input-field col s12 m6 l4">
-                <input id="razon_social" maxlength="200" type="text" name="razon_social"  class="validate">
-                <label class="active" for="razon_social">Cliente</label> 
-            </div>
+			
             <div class="input-field col s12 m6 l4">
                 <input id="sede" maxlength="100" type="text"  class="validate">
                 <label class="active" for="sede">Sede</label> 
             </div>
-            <div class="input-field col s12 m6 l4">
-                <input id="desde" type="text" value="<?= $fechaDesde->format('m/d/Y') ?>" class="datepicker">
-                <label class="active" for="desde">Desde</label> 
-            </div>
+			
+            <div class="input-field col s12 m6 l2">
+				<select id="estado" required>
+						<option value="1">Vigente</option>
+						<option value="2">Vencido</option>
+				</select>
+				<label for="estado">Estado</label>
+			</div>
+			
+			<!--
             <div class="input-field col s12 m6 l4">
                 <input id="hasta" type="text" value="<?= $fechaHasta->format('m/d/Y') ?>" class="datepicker">
                 <label class="active" for="hasta">Hasta</label> 
             </div>
-            <div class="input-field col s4">
+			-->
+			
+            <div class="input-field col s2 l2">
                 <div class="btn-small" id="btnBuscar">Buscar</div>
             </div>
         </form>
@@ -122,9 +142,12 @@
                         <th class="center-align">F. TERMINO</th>
                         <th class="right-align">AREA</th>
                         <th class="right-align">PRECIO</th>
-                        <th class="right-align">SUB TOTAL</th>
+						<th class="right-align">DESCUENTO</th>
+                        <th class="right-align">SUB TOTAL</th>						
                         <th class="center-align">SITUACIÓN</th>
                         <th class="center-align">ELIMINAR</th>
+                        <th class="center-align">VER</th>
+						
                     </tr>
                 </thead>
                 <tbody id="periodos">            
@@ -156,13 +179,40 @@
                     <label for="nuevo_area">Area M2</label>
                 </div>
                 <div class="input-field col s6">
-                    <input placeholder=" " id="nuevo_precio" type="text" class="validate right-align" onkeydown="recalcular()" onchange="recalcular()">
+                    <input placeholder=" " id="nuevo_precio" type="text" class="validate right-align"  onkeyup="recalcular()  "> <!-- onkeydown="recalcular()"   onchange="recalcular()  onchange="recalcular() "-->
                     <label for="nuevo_precio">Precio</label>
                 </div>
-                <div class="input-field col s12">
-                    <input placeholder="" id="np_total" type="text" class="right-align" readonly>
+				
+				
+				<div class="input-field col s3">
+                    <input placeholder=" " id="descuento" type="text" class="right-align" onkeyup="recalculardesc()" >
+                    <label for="descuento">Descuento</label>
+                </div>
+				
+				 <div class="input-field col s3">
+					<select id="descuentoselect">
+					<!--<option value="" disabled selected>Choose your option</option>-->
+					<option value="1">%</option>
+					<option value="2">123</option>
+					<!--<option value="3">Option 3</option>-->
+					</select>
+					<!--<label>Materialize Select</label>-->
+				</div>
+              
+                <div class="input-field col s6">
+                   <!-- <input placeholder="" id="np_total" type="text" class="right-align" readonly>-->
+                   <input placeholder="" id="np_total" type="text" class="right-align" readonly>
                     <label for="total">Total</label>
                 </div>
+				
+				  <div class="input-field col s12">
+                    <input placeholder=" " id="observacion" type="text" class="validate right-align">
+                    <label for="observacion">Observacion</label>
+                </div>
+				
+				
+				
+				
             </div>
         </div>
     </div>
@@ -171,9 +221,72 @@
     </div>
 </div>
 
+
+<div id="modalver" class="modal">
+	<div class="modal-content">
+	
+			<div class="row">
+                <div class="input-field col s6">
+                    <input placeholder=" " id="np_fecha_inicio2" type="text" class="right-align" readonly disabled>
+                    <label for="np_fecha_inicio2">Fecha Inicio</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder=" " id="np_fecha_fin2" type="text" class="right-align" readonly disabled>
+                    <label for="np_fecha_fin2">Fecha Final</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder=" " id="nuevo_area2" type="text" class="right-align" readonly disabled>
+                    <label for="nuevo_area2">Area M2</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder=" " id="nuevo_precio2" type="text" class="validate right-align"  readonly disabled > <!-- onkeydown="recalcular()"   onchange="recalcular()  onchange="recalcular() "-->
+                    <label for="nuevo_precio2">Precio</label>
+                </div>
+				
+				
+				<div class="input-field col s6">
+                    <input placeholder=" " id="descuento2" type="text" class="right-align"  readonly disabled >
+                    <label for="descuento2">Descuento</label>
+                </div>
+				
+				<!--
+				 <div class="input-field col s3">
+					<select id="descuentoselect"   readonly disabled>
+					<option value="1">%</option>
+					<option value="2">123</option>
+					</select>
+				</div>
+				-->
+              
+                <div class="input-field col s6">
+                   <!-- <input placeholder="" id="np_total" type="text" class="right-align" readonly>-->
+                   <input placeholder="" id="np_total2" type="text" class="right-align" readonly disabled>
+                    <label for="np_total2">Total</label>
+                </div>
+				
+				  <div class="input-field col s12">
+                    <input placeholder=" " id="observacion2" type="text" class="validate right-align" readonly disabled>
+                    <label for="observacion2">Observacion</label>
+                </div>
+	
+		</div>
+	
+	
+	</div>
+</div>
+
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var btnBuscar = document.getElementById("btnBuscar"); 
+        
+		//Clientes 
+		CargarCliente();
+		buscar();
+		
+		
+		var btnBuscar = document.getElementById("btnBuscar"); 
         btnBuscar.addEventListener("click", buscar, false);
         
         acuerdo_id = getParameterByName('aca')
@@ -183,7 +296,74 @@
             M.updateTextFields(); //este metodo sale de materialize
             buscar()
         }
+		
+	
+	$('#descuentoselect').on('change', function()
+	{
+	 $('#descuento').val('');
+	 $('#np_total').val((parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val())).toFixed(2));
+	//console.log("borrar");
+	//alert( this.value );
+	});
+
+	
+		
     });
+	
+	function CargarCliente(){
+	
+	let url = '<?= base_url() ?>api/execsp';
+	let sp = "CLIENTE_ESCLIENTE_LIS";
+	
+	let idempresa = 1;
+	let idcliente = 0;
+
+	
+	let data = {sp, idempresa, idcliente};
+	
+	fetch(url, {
+
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(function(response){
+			return response.json();
+		})
+		.then(function(data){
+			if(data.length > 0 ){
+			
+			var clientArray = data;
+			var clientList = {};
+			for (var i = 0; i < clientArray.length; i++) {
+			clientList[clientArray[i].CLIENT_C_RAZON_SOCIAL] = null;
+			}
+			$('input.autocomplete').autocomplete({
+			data: clientList,
+			onAutocomplete: function(val) {
+			// Callback function when value is autcompleted.
+			
+			//idCliente(val);
+      
+			//Here you then can do whatever you want, val tells you what got clicked so you can push to another page etc...
+			},
+		
+			});
+			//console.log(data);
+			}else{
+			
+			console.log("no hay data");
+			
+			//M.toast({html: 'No se encontraron resultados', classes: 'rounded'});
+			//var r = confirm("Desea registrar un nuevo visitante");
+				
+			}
+			///$('.preloader-background').css({'display': 'none'});                            
+	  });
+		
+	}
 
     function buscar()
     {
@@ -193,34 +373,54 @@
 
         var url = 'acuerdo/buscar';
 
+
+		//Acuerdo ID
+		/*
         var acuerdo_id = 0; 
         if($('#acuerdo_id').val() != '')
         {
             acuerdo_id = $('#acuerdo_id').val();
         }
+		*/
+		
         var cliente = '%'; 
         if($('#razon_social').val() != '')
         {
             cliente = $('#razon_social').val() + '%';
         }
+		
+		
         var sede = '%'; 
         if($('#sede').val() != '')
         {
             sede = $('#sede').val() + '%';
         }
-        $fecha_desde = $('#desde').val();
+		
+		var estado='%';
+		
+		if($('#estado').val() != '')
+		{
+			 estado = $('#estado').val();
+		}
+		
+		//console.log($('#estado').val());
+		
+        /*
+		$fecha_desde = $('#desde').val();
         $fecha_desde = $fecha_desde.split('/');
         
         $fecha_hasta = $('#hasta').val();
         $fecha_hasta = $fecha_hasta.split('/');
-
+		*/
+		
         var data = {
                     empresa: <?= $empresa->EMPRES_N_ID ?>, 
-                    acuerdo: acuerdo_id,
+                   // acuerdo: acuerdo_id,
                     cliente: cliente,
                     sede: sede,
-                    fecha_desde: $fecha_desde[2] + $fecha_desde[1] + $fecha_desde[0],
-                    fecha_hasta: $fecha_hasta[2] + $fecha_hasta[1] + $fecha_hasta[0]
+					estado: estado,
+                    //fecha_desde: $fecha_desde[2] + $fecha_desde[1] + $fecha_desde[0],
+                    //fecha_hasta: $fecha_hasta[2] + $fecha_hasta[1] + $fecha_hasta[0]
                     };
         
         $('#resultados').html('');
@@ -237,16 +437,101 @@
         .then(function(data) 
         {
             $('#total').html(data.length);
-            console.log("Abajo se encontrara la funcion data")
-            console.log(data);
+            //console.log("Abajo se encontrara la funcion data")
+            //console.log(data);
             if(data.length > 0)
             {
                 M.toast({html: 'Cargando Acuerdos', classes: 'rounded'});
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    
-					console.log("Abajo estara la variable element");
-					console.log( element);
+                   
+				
+				fecha_fin = element.ALQUIL_C_FECHA_FINAL;
+				
+				var xMonth =fecha_fin.substring(3, 5);
+				//console.log(xMonth);
+				var xDay =fecha_fin.substring(0, 2);
+				//console.log(xDay);
+				var xYear=fecha_fin.substring(6,10);
+				//console.log(xYear);
+				var xDate = xYear + "-" + xMonth + "-" + xDay;
+				
+				var d = new Date(xDate);
+				d = (RestoMeses(d, -3));
+				
+				
+				let dayfin = d.getDate();
+				
+				if(dayfin < 10){
+				dayfin = `0${dayfin}`;
+				}
+				else{
+				dayfin = `${dayfin}`;
+				}
+				
+				let monthfin = d.getMonth()+1 ;
+			
+				if(monthfin < 10){
+				monthfin=`0${monthfin}`;
+				}else{
+				monthfin=`${monthfin}`;
+				}
+				
+				let yearfin = d.getFullYear();
+				
+				var fecharesto = dayfin +"/"+monthfin+"/"+yearfin;
+				
+				//console.log(xDateResto);
+				
+				//console.log("Abajo estara la variable element");
+				//console.log( element);
+			    
+			   var fechasis = new Date();
+			   	   //fechasis = fechasis.getDate() + "/"  + (fechasis.getMonth() +1) + "/" + fechasis.getFullYear();
+	
+				   let day = fechasis.getDate();
+				
+					if(day < 10){
+					day = `0${day}`;
+					}
+					else{
+					day = `${day}`;
+					}
+					
+					let month = fechasis.getMonth()+1 ;
+				
+					if(month < 10){
+					month=`0${month}`;
+					}else{
+					month=`${month}`;
+					}
+					
+					let year = fechasis.getFullYear();
+					
+					var vfechasis = day +"/"+month+"/"+year;
+				   //console.log(vfechasis);
+				  
+				  
+				 if (compare_dates(vfechasis,fecharesto))
+				 { 
+				 
+				 $vcolor= 'style="color:#ff0000"';
+				//console.log("pintar");
+				//console.log(element.ALQUIL_N_ID);
+				//$("#idfechafinal_"+element.ALQUIL_N_ID).css('color', 'red');
+				//console.log("pinto");
+				
+				}else{ 
+				
+				$vcolor='';
+				
+				}  
+				  
+				  
+				  
+				  
+				  
+				//console.log(element.ALQUIL_C_FECHA_FINAL);
                 
                     $cerrado='<i class="material-icons tooltipped" style="color: #999" data-tooltip="No puede cerrar el Acuerdo, tiene periodos pendientes">lock_open</i>';
                     if(element.ALQUIL_C_ESTA_CERRADO==1){
@@ -270,7 +555,7 @@
                         }
                     }
 
-                    $ver_periodos = `${element.CANTIDAD_DETALLES} <i class="material-icons" style="vertical-align: middle; cursor: pointer" onclick="verPeriodos(${element.EMPRES_N_ID},${element.ALQUIL_N_ID}, ${element.ALQUIL_C_ESTA_CERRADO})">event_note</i>`
+                    $ver_periodos = `${element.CANTIDAD_DETALLES} <i class="material-icons" style="vertical-align: middle; cursor: pointer" onclick="verPeriodos(${element.EMPRES_N_ID},${element.ALQUIL_N_ID}, ${element.ALQUIL_C_ESTA_CERRADO},'${element.ALQUIL_C_FECHA_FINAL}')">event_note</i>`
 
                     $('#resultados').append(`   <tr>
                                                     <td class="center-align">${element.ALQUIL_N_ID}</td>
@@ -278,7 +563,7 @@
                                                     <td class="left-align">${element.SEDE_C_DESCRIPCION}</td>
                                                     <td class="left-align">${element.UBICAC_C_DESCRIPCION}</td>
                                                     <td class="center-align">${element.ALQUIL_C_FECHA_INICIO}</td>
-                                                    <td class="center-align">${element.ALQUIL_C_FECHA_FINAL}</td>
+                                                    <td class="center-align" id="idfechafinal_${element.ALQUIL_N_ID}" ${$vcolor} >${element.ALQUIL_C_FECHA_FINAL}</td>
                                                     <td class="center-align">${$cerrado}</td>
                                                     <td class="center-align">
                                                         ${$ver_periodos}                
@@ -306,7 +591,38 @@
 
     function recalcular()
     {
-        $('#np_total').val(parseInt($('#nuevo_area').val()) * parseInt($('#nuevo_precio').val()))        
+        
+		console.log(parseFloat($('#nuevo_area').val()));		
+		console.log(parseFloat($('#nuevo_precio').val()));
+		$('#np_total').val(parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val()));        
+		//$('#np_total').val(parseInt($('#nuevo_area').val()) * parseInt($('#nuevo_precio').val()))        
+    }
+	
+	function recalculardesc()
+    {
+        //console.log("ingreso");
+		//console.log($('#descuento').val());
+		var vdesc = $('#descuentoselect').val();
+		var vtotal =0;
+		//console.log($('#descuentoselect').val());
+		if(vdesc=="1")
+		{
+			//vtotal = ( ($('#np_total').val() - ($('#descuento').val() * (parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val()) ))/100);
+			//vtotal = parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val())
+			vtotal = ((parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val())) - ($('#descuento').val() * (parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val()) ))/100);
+			$('#np_total').val(vtotal);
+			//console.log(vtotal);
+			//;
+		}
+		else if(vdesc=="2")
+		{
+			vtotal = ((parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val())) - $('#descuento').val());
+			$('#np_total').val(vtotal);
+		}
+		//console.log(parseFloat($('#nuevo_area').val()));		
+		//console.log(parseFloat($('#nuevo_precio').val()));
+		//$('#np_total').val(parseFloat($('#nuevo_area').val()) * parseFloat($('#nuevo_precio').val()));        
+		//$('#np_total').val(parseInt($('#nuevo_area').val()) * parseInt($('#nuevo_precio').val()))        
     }
 
     function modalEliminar($tipo, $registro)
@@ -374,10 +690,10 @@
         $('#btnConfirmarCerrar').attr('href', 'acuerdo/'+$empresa+'/'+$acuerdo+'/cerrar')
     }
     
-    function verPeriodos($empresa,$acuerdo, $cerrado = 0)
+    function verPeriodos($empresa,$acuerdo, $cerrado = 0,$fecha_final)
     {
-        console.log('Estoy buscando.. ')
-
+        console.log('Estoy buscando.. ');
+		
         if($cerrado > 0)
         {
             $('#btnAgregarPeriodo').css({'display': 'none'});
@@ -410,7 +726,42 @@
          
             for (let index = 0; index < data.length; index++) {
                 const element = data[index];
+				//var vdesc = 0;
 
+				if(!element.ALQDET_DESC){
+					$vdesc = '';
+				}
+				else
+				{
+					$vdesc = parseInt(element.ALQDET_DESC);
+				}
+				
+				
+				if(!element.ALQDET_DESC_ESTADO_VALOR){
+					$vdescestado = '';
+				}
+				else
+				{
+					$vdescestado = element.ALQDET_DESC_ESTADO_VALOR;
+				}
+				
+				
+				if(!element.ALQDET_DESC_ESTADO)
+				{
+						$vtotal= parseFloat(element.ALQDET_N_AREA) * parseFloat(element.ALQDET_N_PRECIO_UNIT);
+				}
+				else if(element.ALQDET_DESC_ESTADO==1)
+				{
+					$vtotal = ((parseFloat(element.ALQDET_N_AREA) * parseFloat(element.ALQDET_N_PRECIO_UNIT)) - (element.ALQDET_DESC * (parseFloat(element.ALQDET_N_AREA) * parseFloat(element.ALQDET_N_PRECIO_UNIT) ))/100);
+					
+				}else if(element.ALQDET_DESC_ESTADO==2)
+				{
+					$vtotal = ((parseFloat(element.ALQDET_N_AREA) * parseFloat(element.ALQDET_N_PRECIO_UNIT)) - element.ALQDET_DESC);
+				}
+				
+				$vtotal=$vtotal.toFixed(2);
+				
+				
                 $situacion = '';
                 let $eliminar = `<i class="material-icons" style="color: #999999">delete</i>`
                 if(element.ALQDET_C_SITUACION == '0')
@@ -426,6 +777,9 @@
                     $situacion = `<p style="color: #4690F5;"><b>${element.ALQDET_C_SITUACION_DES}</b><i class="material-icons" style="cursor: pointer"></i></p>`;
                 }
                 
+				
+				//<td class="right-align">${element.TOTAL}</td>
+				
                 $('#periodos').append(`   
                                         <tr>
                                             <td class="center-align">${element.ALQDET_N_ID}</td>
@@ -433,15 +787,73 @@
                                             <td class="center-align">${element.ALQDET_C_FECHA_FINAL}</td>
                                             <td class="right-align">${element.ALQDET_N_AREA}</td>
                                             <td class="right-align">${element.ALQDET_N_PRECIO_UNIT}</td>
-                                            <td class="right-align">${element.TOTAL}</td>
+                                            <td class="right-align">${$vdesc}  ${$vdescestado}</td>
+											<td class="right-align">${$vtotal}</td>
                                             <td class="center-align">${$situacion}</td>
                                             <td class="center-align">
                                                 ${$eliminar} 
                                             </td>
+											<td>
+													<button class="waves-effect waves-light btn" onclick="Ver(this)" attr_id="${element.ALQUIL_N_ID}" attr_id_det="${element.ALQDET_N_ID}" >VER</button>
+											</td>
                                         </tr>
                                     `);
-            }
+            
+			//Agregado
+			var alq_fecha_final = `${element.ALQDET_C_FECHA_FINAL}`;
+			//console.log(alq_fecha_final);
+			var vdisabled =0;
+			
+			if(alq_fecha_final == $fecha_final){
+				//console.log("ingreso");
+				//
+				vdisabled=1;
+			}
+			else
+			{
+				vdisabled=0;
+			}
+			
+			
+			//console.log($fecha_final);
+			//fin agregado
+			}
+			
+			//Agregado
+			var estado = $('#estado').val();
+			
+		
+			
+			//////////////////////
+			
+			if(vdisabled==1)
+			{
+				$('#btnAgregarPeriodo').attr("disabled", true);
+			}
+			else
+			{
+				//$('#btnAgregarPeriodo').attr("disabled", false);
+				
+			if(estado==2)
+			{
+			console.log("ingreso estado");
+			$('#btnAgregarPeriodo').attr("disabled", true);
+			}
+			else
+			{
+			$('#btnAgregarPeriodo').attr("disabled", false);
+			}
+			}
+			
+			
+			//Fin agregado
+			
             $('#modalPeriodos').modal('open');
+			
+		
+			
+			
+			
             $('.preloader-background').css({'display': 'none'});                            
         });
     }
@@ -476,7 +888,9 @@
             $('#np_fecha_fin').val(data[0].FECHA_FINAL)
             $('#nuevo_area').val(data[0].ALQDET_N_AREA)
             $('#nuevo_precio').val(data[0].ALQDET_N_PRECIO_UNIT)
-            $('#np_total').val(data[0].ALQDET_N_AREA * data[0].ALQDET_N_PRECIO_UNIT)
+			//console.log((1888.12 * 5.00).toFixed(2));
+			//$('#np_total').val(parseFloat(1888.12) * parseFloat(5))
+			$('#np_total').val((data[0].ALQDET_N_AREA * data[0].ALQDET_N_PRECIO_UNIT).toFixed(2));
             if(data[0].TIPALM_N_ID == 1)
             {
                 console.log('techado')
@@ -502,8 +916,11 @@
         let area = $('#nuevo_area').val();
         let precio =  $('#nuevo_precio').val();
         let usuario =  <?= $session->USUARI_N_ID ?>;
+        let descuento =  $('#descuento').val();
+        let descuentoselect =  $('#descuentoselect').val();
+        let observacion =  $('#observacion').val();
 
-        let data = {empresa, acuerdo, area, precio, usuario};
+        let data = {empresa, acuerdo, area, precio, usuario,descuento,descuentoselect,observacion};
 
         if(area != '' && precio != '')
         {
@@ -522,14 +939,207 @@
             .then(function(data) 
             {
                 M.toast({html: 'Periodo creado correctamente', classes: 'rounded'});    
-                $('.preloader-background').css({'display': 'none'});                            
-                verPeriodos(empresa, acuerdo);            
+                $('.preloader-background').css({'display': 'none'});				
+                verPeriodos(empresa, acuerdo);
+				$('#descuento').val('');
+				$('#observacion').val('');
             });
-        }else{
+        }
+		else
+		{
             M.toast({html: 'Debe llenar todos los campos', classes: 'rounded'});
             return false; 
         }
     }
+	
+	
+function RestoMeses(fecha, meses){
+  fecha.setMonth(fecha.getMonth() + meses);
+  return fecha;
+}
+
+
+function compare_dates(fecha, fecha2)  //fechasis - fechafin
+{  
+    var xMonth=fecha.substring(3, 5);  
+    var xDay=fecha.substring(0, 2);  
+    var xYear=fecha.substring(6,10);
+		//console.log(xMonth);
+		//console.log(xDay);
+		//console.log(xYear);
+		
+	//var yMonth=fecha2.substring(3, 5);  
+    //var yDay=fecha2.substring(0, 2);  
+    //var yYear=fecha2.substring(6,10);
+		
+	var yMonth=fecha2.substring(3,5);  //str.substring(7,5); substring(5, 0)
+    var yDay=fecha2.substring(0,2);  //substring(10,8) substring(0,4
+    var yYear=fecha2.substring(6,10);  
+		
+		//console.log(fecha2);
+		//console.log(yMonth);
+		//console.log(yDay);
+		//console.log(yYear);
+	
+    if (xYear > yYear)   //  2021 > 2021
+    {  
+		//console.log("entro anio");
+        return(true); 
+    }  
+    else  
+    {  
+      if (xYear == yYear)  //2021 == 2021
+      {   
+		
+		//console.log("mes validacion:"+xMonth);
+		
+        if (xMonth > yMonth) //01 > 04  
+        {  
+			//console.log("mes mayor");
+            return(true); 
+        }  
+        else  
+        {   
+          if (xMonth == yMonth)  
+          {  
+            if (xDay >= yDay)  {
+			  //console.log("ingresa aqui");
+              //return(true);  
+			}
+			//else if (xDay = yDay) {		
+			  //console.log("ingresa aqui2");
+             // return(true); 
+			//}
+			else  
+              return(false);  
+          }  
+          else  
+            return(false);  
+        }  
+      }  
+      else  
+        return(false);  
+    }  
+}
+
+
+async function Ver(e)
+{
+	let url = '<?= base_url() ?>api/execsp';
+	let sp = "ALQUILER_DETALLE_DATA";
+	
+	let empresa = <?= $empresa->EMPRES_N_ID ?>;
+	let idalquiler = $(e).attr('attr_id');
+	let idalquilerdetalle = $(e).attr('attr_id_det');
+	let vdesc="";
+	let vdescestado="";
+	let vtotal=0;
+	//console.log(empresa);
+	//console.log(idalquiler);
+	//console.log(idalquilerdetalle);
+	
+	
+	data = {sp, empresa,idalquiler,idalquilerdetalle};
+	
+	
+	
+		fetch(url, {
+
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(function(response){
+			return response.json();
+		})
+		.then(function(data){
+			if(data.length > 0 ){
+				M.toast({html: 'Obteniendo datos...', classes: 'rounded'});
+
+			console.log(data);
+
+				document.getElementById('np_fecha_inicio2').value = data[0].ALQDET_C_FECHA_INICIO;
+				document.getElementById('np_fecha_fin2').value = data[0].ALQDET_C_FECHA_FINAL;
+				document.getElementById('nuevo_area2').value = data[0].ALQDET_N_AREA;
+				document.getElementById('nuevo_precio2').value = data[0].ALQDET_N_PRECIO_UNIT;
+				
+				if(!data[0].ALQDET_DESC){
+					vdesc = '';
+				}
+				else
+				{
+					vdesc = parseInt(data[0].ALQDET_DESC);
+				}
+				
+				
+				if(!data[0].ALQDET_DESC_ESTADO_VALOR){
+					vdescestado = '';
+				}
+				else
+				{
+					vdescestado = data[0].ALQDET_DESC_ESTADO_VALOR;
+				}
+				
+				
+				if(!data[0].ALQDET_DESC_ESTADO)
+				{
+						vtotal= parseFloat(data[0].ALQDET_N_AREA) * parseFloat(data[0].ALQDET_N_PRECIO_UNIT);
+				}
+				else if(data[0].ALQDET_DESC_ESTADO==1)
+				{
+					vtotal = ((parseFloat(data[0].ALQDET_N_AREA) * parseFloat(data[0].ALQDET_N_PRECIO_UNIT)) - (data[0].ALQDET_DESC * (parseFloat(data[0].ALQDET_N_AREA) * parseFloat(data[0].ALQDET_N_PRECIO_UNIT) ))/100);
+					
+				}else if(data[0].ALQDET_DESC_ESTADO==2)
+				{
+					vtotal = ((parseFloat(data[0].ALQDET_N_AREA) * parseFloat(data[0].ALQDET_N_PRECIO_UNIT)) - data[0].ALQDET_DESC);
+				}
+				
+				vtotal=vtotal.toFixed(2);
+				
+				document.getElementById('descuento2').value = vdesc+' '+vdescestado;
+				document.getElementById('np_total2').value = vtotal;
+				document.getElementById('observacion2').value = data[0].ALQDET_OBSERVACION;
+								
+				//M.updateTextFields();
+			}else{
+				//M.toast({html: 'No se encontraron resultados', classes: 'rounded'});
+				//var r = confirm("Desea registrar un nuevo visitante");
+				
+			
+			}
+			//$('.preloader-background').css({'display': 'none'});                            
+		});	
+				
+		//await	$('#modal1').modal('open');	
+	
+	
+	
+	
+	//console.log("ingresa");
+	await $('#modalver').modal('open');	
+}
+
+$('#modalver').modal({
+   onCloseStart(){
+	    document.getElementById('np_fecha_inicio2').value = "";
+		document.getElementById('np_fecha_fin2').value = "";
+		document.getElementById('nuevo_area2').value = "";
+		document.getElementById('nuevo_precio2').value = "";
+		document.getElementById('descuento2').value = "";
+		document.getElementById('np_total2').value = "";
+		document.getElementById('observacion2').value = "";
+        },
+   onCloseEnd(){
+		document.getElementById('np_fecha_inicio2').value = "";
+		document.getElementById('np_fecha_fin2').value = "";
+		document.getElementById('nuevo_area2').value = "";
+		document.getElementById('nuevo_precio2').value = "";
+		document.getElementById('descuento2').value = "";
+		document.getElementById('np_total2').value = "";
+		document.getElementById('observacion2').value = "";
+        },
+});
+
 </script>
-
-

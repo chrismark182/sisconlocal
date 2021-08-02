@@ -12,7 +12,7 @@
     <form action="<?= base_url() ?>personas/crear" method="post" id="form">
         <div class="row">
             <div class="input-field col s12 m6 l4">
-                <select id="cliente" name="cliente">
+                <select id="cliente" name="cliente" >
                     <option value="" disabled selected>Seleccionar Empresa</option>
                         
                     <?php if($clientes): ?>

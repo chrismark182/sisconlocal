@@ -1,7 +1,14 @@
 <?php 
     $fechaDesde = new DateTime();
-    $fechaDesde->modify('first day of this month');    
-    $fechaHasta = new DateTime();
+    $fechaDesde->modify('first day of this month');
+
+
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);	
+    
+	//$fechaHasta = new DateTime();
 ?>
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
     <div class="nav-wrapper">
@@ -107,7 +114,7 @@
     </table>
 </div>
 
-<a  class="btn-floating btn-large waves-effect waves-light red" style="bottom:16px; right:16px; position:absolute;" 
+<a  class="btn-floating btn-large waves-effect waves-light red" style="bottom:16px; right:16px; position:fixed;" 
     href="<?= base_url()?>ordenservicio/nuevo"><i class="material-icons">add</i></a>
 
 <div id="modalEliminar" class="modal">

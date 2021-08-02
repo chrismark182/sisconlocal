@@ -49,7 +49,7 @@
                 <label class="active" for="descripcion">Descripción</label> 
             </div>
             <div class="input-field col s12 m6 l4">
-                <input id="metro" type="number" min="1" maxlength="9" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="metro" value ="<?= $ubicacion->UBICAC_N_M2 ?>" class="validate">
+                <input id="metro" type="number" step="0.01" min="1" maxlength="9" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="metro" value ="<?= $ubicacion->UBICAC_N_M2 ?>" class="validate">
                 <label class="active" for="metro">Metros Cuadrados</label> 
             </div>
             <div class="input-field col s12">

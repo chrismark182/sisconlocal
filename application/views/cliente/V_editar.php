@@ -1,3 +1,18 @@
+<?php 
+    
+ $vempresa	= $empresa->EMPRES_N_ID ;  
+
+    if($vempresa==3)
+    {
+        $vdocumento="";
+    }
+    else
+    {
+        $vdocumento="readonly";
+    }
+    
+?>
+
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
     <div class="nav-wrapper">
         <div class="col s12">
@@ -29,7 +44,7 @@
             </div>
             
             <div class="input-field col s12 m6 l2">
-                <input id="ndocumento" maxlength="15" type="text" readonly="true" name="ndocumento" value ="<?= $cliente->CLIENT_C_DOCUMENTO ?>" class="validate">
+                <input id="ndocumento" maxlength="15" type="text"  name="ndocumento" value ="<?= $cliente->CLIENT_C_DOCUMENTO ?>" class="validate" <?= $vdocumento ?>  >
                 <label class="active" for="ndocumento">Nro. Documento</label> 
             </div>
             <div class="input-field col s12 m6 l6">
@@ -80,6 +95,21 @@
                         <span>Es Transportista</span>
                     </label>
                 </p>
+				<?php  
+                $checked='';
+                    
+                    if($cliente->CLIENT_C_OTRO=='1'):
+                        $checked='checked';
+                         
+                     endif; ?>
+                <p>
+                    <label>
+                        <input <?= $checked ?> id="otro" name="otro" type="checkbox"/>
+                        <span>Otro</span>
+                    </label>
+                </p>
+				
+				
              
             </div>
             <div class="input-field col s12 m6 l4">

@@ -10,6 +10,11 @@ class C_api extends CI_Controller {
         parent::__construct();
         if($this->session->userdata('logged_in')):
             $this->load->model('M_crud');
+			/*Agregado*/
+			$this->load->library('EsandexAccesos');  
+			$this->data['session'] = $this->esandexaccesos->session();
+            $this->data['accesos'] = $this->esandexaccesos->accesos();
+			/*fin agregado*/
             $empresa = $this->M_crud->read('empresa', array('EMPRES_N_ID' => $this->session->userdata('empresa_id')));
             $this->data['empresa']=$empresa[0];           
 		else:
@@ -79,7 +84,7 @@ class C_api extends CI_Controller {
     public function acuerdos_periodos_guardar()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $sql= "Exec ALQUILER_DETALLE_INS {$data['empresa']}, {$data['acuerdo']}, {$data['area']}, {$data['precio']}, {$data['usuario']}";
+        $sql= "Exec ALQUILER_DETALLE_INS {$data['empresa']}, {$data['acuerdo']}, {$data['area']}, {$data['precio']}, {$data['usuario']},{$data['descuento']},{$data['descuentoselect']},'{$data['observacion']}'"; 
         $query = $this->M_crud->sql($sql);
         echo json_encode($query, true);
     }
@@ -138,4 +143,49 @@ class C_api extends CI_Controller {
         move_uploaded_file($file_tmp,__DIR__."/../../uploads/".$file_name);
         echo $file_name;
     }
+
+
+	public function crearC()
+	{
+	
+		$data = json_decode(file_get_contents('php://input'), true);
+        
+        if(isset($data['idcheckboxsctr']))
+        {
+            $idcheckboxsctr=$data['idcheckboxsctr'];
+        
+        }
+        else
+        {
+           $idcheckboxsctr=0;
+        }
+    
+        
+        
+        
+        
+        //$idcheckboxsctr=$data['idcheckboxsctr'];
+        
+        //if($idcheckboxsctr==0 or $idcheckboxsctr=="")
+        //{
+        //$idcheckboxsctr=0;
+        //}
+        
+		$sql = "Exec PERSONA_INS "      . $this->data['empresa']->EMPRES_N_ID . ","
+										. $data['cliente_'] . "," 
+										. $data['tdocumento_'] . ",'" 
+										. $data['ndocumento_'] . "','" 
+										. $data['nombres'] . "','" 
+										. $data['apellidos'] . "','" 
+										. $data['foto'] . "','" 
+										. $data['scrt_ini'] . "','" 
+										. $data['scrt_fin'] . "'," 
+										. $this->data['session']->USUARI_N_ID."," 
+										. $idcheckboxsctr ;
+	
+		
+		$query = $this->M_crud->sql($sql);
+		echo json_encode($query, true);
+	}
+	
 }

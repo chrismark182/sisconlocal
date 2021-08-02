@@ -26,9 +26,21 @@
                 </select>
                 <label>Categoría</label>
             </div>
+			
+			 <div class="input-field col s12 m6">
+                <input id="firstname" maxlength="20" type="text" name="firstname" value="<?= $usuario->USUARI_C_NOMBRE ?>" class="validate">
+                <label class="active" for="firstname">Nombre</label> 
+            </div>
+			
+            <div class="input-field col s12 m6">
+                <input id="lastname" maxlength="20" type="text" name="lastname" value="<?= $usuario->USUARI_C_APELLIDO ?>" class="validate">
+                <label class="active" for="lastname">Apellido</label> 
+            </div>
+			
             <div class="input-field col s12">
                 <input class="btn-small" type="submit" value="Guardar">
             </div>
+			
         </div>
     </form>
 </div>

@@ -1,8 +1,13 @@
 <?php 
     $fechaDesde = new DateTime();
     //$fechaDesde->modify('-1 month');
-    $fechaDesde->modify('first day of January');    
-    $fechaHasta = new DateTime();
+    $fechaDesde->modify('first day of January');   
+
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);
+	//$fechaHasta = new DateTime();
 ?>
 <style>
     .column-filtros

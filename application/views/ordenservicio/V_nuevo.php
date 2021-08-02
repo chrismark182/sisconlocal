@@ -103,6 +103,12 @@
 
     function crear()
     {
+		
+		
+		//return false;
+		//btn_guardar.prop('disabled', true);
+		
+		
         if(  
             document.getElementById("sede").value != '' &&
             document.getElementById("servicio").value != '' &&
@@ -110,6 +116,9 @@
             document.getElementById("solicitante").value != '' &&
             document.getElementById("tarifa").value != '')
         {
+			
+			$("#btn_guardar").attr('disabled','disabled');
+			
             $('.preloader-background').css({'display': 'block'});
             var url =  '<?= base_url() ?>ordenservicio/crear';
             var data = {

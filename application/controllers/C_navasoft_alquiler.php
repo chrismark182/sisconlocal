@@ -101,35 +101,39 @@ class C_navasoft_alquiler extends CI_Controller {
             'nrod'          => $resultSet['NROD'],
             'origen'        => $resultSet['ORIGEN']
         );
-        //var_dump($cabecera);
-        $result = (object) null;
         
+		//var_dump($cabecera);
+        
+		//echo var_dump($cabecera);
+		$result = (object) null;
+        
+		
         $this->M_dbf->create('docterminal', $cabecera, 0);
 
-        $rutaLocal = realpath(__DIR__ . '/..') . '\\dbf\\generado\\';
+        //$rutaLocal = realpath(__DIR__ . '/..') . '\\dbf\\generado\\';
         //$rutaServer = '\\\\10.0.0.22\\DataCarga\\DBFCOURIER\\';
-        $rutaServer = 'D:\\DataCarga\\';
+        //$rutaServer = 'D:\\DataCarga\\';
 
-        $dbfCabecera = 'docterminal.dbf';
-        $dbfDetalle = 'detdocterminal.dbf';
+        //$dbfCabecera = 'docterminal.dbf';
+       // $dbfDetalle = 'detdocterminal.dbf';
         
-        error_reporting(E_ERROR | E_PARSE);
+        //error_reporting(E_ERROR | E_PARSE);
 
-        $result->status=0;
-        if(count($cabecera)>0):
-            $result->status=1;
-            if(!copy($rutaLocal . $dbfCabecera, $rutaServer . $dbfCabecera)):
-                $result->errorCabecera = "Error al copiar ". $dbfCabecera;
-            endif;
-            if(!copy($rutaLocal . $dbfDetalle, $rutaServer . $dbfDetalle)):
-                $result->errorDetalle = "Error al copiar " . $dbfDetalle;
-            endif;
-            $result->data=$cabecera;       
-        endif;
+        //$result->status=0;
+        //if(count($cabecera)>0):
+            //$result->status=1;
+            //if(!copy($rutaLocal . $dbfCabecera, $rutaServer . $dbfCabecera)):
+            //    $result->errorCabecera = "Error al copiar ". $dbfCabecera;
+            //endif;
+           // if(!copy($rutaLocal . $dbfDetalle, $rutaServer . $dbfDetalle)):
+          //      $result->errorDetalle = "Error al copiar " . $dbfDetalle;
+          //  endif;
+         //   $result->data=$cabecera;       
+        //endif;
 
-        $sql= "Exec LIQUIDACION_UPD_NAVASOFT {$data['empresa']}, {$data['liquidacion']}, {$data['usuario']}";
-        $query = $this->M_crud->sql($sql);
-        echo json_encode($query, true);
+        //$sql= "Exec LIQUIDACION_UPD_NAVASOFT {$data['empresa']}, {$data['liquidacion']}, {$data['usuario']}";
+        //$query = $this->M_crud->sql($sql);
+        //echo json_encode($query, true);
     }
 }
 

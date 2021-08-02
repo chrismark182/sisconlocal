@@ -46,8 +46,12 @@ class C_acuerdo extends CI_Controller {
     public function buscar()
     {
 	    $data = json_decode(file_get_contents('php://input'), true);
-        $sql= "Exec ALQUILER_LIS {$data['empresa']}, {$data['acuerdo']}, '{$data['cliente']}', '{$data['sede']}', '{$data['fecha_desde']}', '{$data['fecha_hasta']}'";
-        $query = $this->M_crud->sql($sql);
+        /*
+		$sql= "Exec ALQUILER_LIS {$data['empresa']}, {$data['acuerdo']}, '{$data['cliente']}', '{$data['sede']}', '{$data['fecha_desde']}', '{$data['fecha_hasta']}'";
+        */
+		$sql= "Exec ALQUILER_LIS {$data['empresa']},'{$data['cliente']}', '{$data['sede']}',{$data['estado']}";
+		
+		$query = $this->M_crud->sql($sql);
         echo json_encode($query, true);
     }
 
@@ -65,6 +69,42 @@ class C_acuerdo extends CI_Controller {
 
     public function crear()
     {
+		/*AGREGADO*/
+		//File
+			 $config['upload_path']          = './uploads/';
+             $config['allowed_types']        = 'gif|jpg|png|pdf|jpeg';
+             $config['max_size']             = 50000; // Can be set to particular file size , here it is 2 MB(2048 Kb)
+             //$config['max_width']            = 1024;
+             //$config['max_height']           = 1780;
+			 $config['encrypt_name'] = TRUE;
+			
+			$this->load->library('upload', $config);
+			
+			
+			//if (isset($_FILES['archivo']))
+			//{			
+                if (!$this->upload->do_upload('archivo'))
+                {
+                      $error = array('error' => $this->upload->display_errors());
+					  //echo $this->upload->display_errors();
+                      //$this->load->view('upload_form', $error);
+					  $file="";
+                }
+                else
+                {
+                       $data = array('upload_data' => $this->upload->data());  
+					   $file=$this->upload->data('file_name');
+                }
+				
+			//}
+			//else
+			//{
+			//	$file="";
+				
+			//}	
+		/*FIN AGREGADO*/
+		
+		
         $facturable = '0';
         if($this->input->post('facturable') == 'on'):
             $facturable = '1';
@@ -78,10 +118,13 @@ class C_acuerdo extends CI_Controller {
                                     '{$this->input->post('fecha_termino')}', 
                                     {$this->input->post('area')}, 
                                     '{$this->input->post('observaciones')}', 
+                                    '{$this->input->post('garantia')}', 
+                                    '{$file}', 
                                     {$this->input->post('moneda')}, 
                                     {$this->input->post('precio')}, 
                                     {$this->data['session']->USUARI_N_ID}";
-        $id = $this->M_crud->sql($sql);
+        
+		$id = $this->M_crud->sql($sql);
         $url = 'acuerdos?aca=' . $id[0]->ALQUIL_N_ID; 
         redirect($url,'refresh');   
     }

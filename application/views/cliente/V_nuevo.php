@@ -58,6 +58,13 @@
                         <span>Es Transportista</span>
                     </label>
                 </p>
+				
+				 <p>
+                    <label>
+                        <input id="otro" name="otro" type="checkbox"/>
+                        <span>Otro</span>
+                    </label>
+                </p>
              
             </div>
             <div class="input-field col s12 m6 l4">
@@ -88,7 +95,12 @@
             document.getElementById('tdocumento').value.trim() != '' &&
             document.getElementById('ndocumento').value.trim()  != '' &&
             document.getElementById('razon_social').value.trim() != '' &&
-            document.getElementById('direccion').value.trim() != ''
+            document.getElementById('direccion').value.trim() != '' &&
+			(document.getElementById('escliente').checked == true ||
+			 document.getElementById('esproveedor').checked == true ||
+			 document.getElementById('estransportista').checked == true ||
+			 document.getElementById('otro').checked == true
+			)
         )
         {
             if( 

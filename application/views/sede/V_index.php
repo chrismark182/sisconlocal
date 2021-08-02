@@ -29,6 +29,7 @@
                 <th class="left-align">SEDE</th>
                 <th class="left-align">DIRECCIÓN DEL LOCAL</th>
                 <th class="left-align">ABREVIATURA</th>
+				<th class="left-align">M2 TOTAL</th>
                 <th class="center-align">EDITAR</th>
                 <th class="center-align">ELIMINAR</th>
             </tr>
@@ -41,6 +42,7 @@
                         <td class="left-align"><?=$sede->SEDE_C_DESCRIPCION?></td>
                         <td class="left-align"><?=$sede->SEDE_C_DIRECCION?></td>
                         <td class="left-align"><?=$sede->SEDE_C_ABREVIATURA?></td>
+						<td class="left-align"><?=$sede->SEDE_C_METRAJETOTAL?></td>
                         <td class="center-align">
                             <a href="<?= base_url() ?>sede/<?= $sede->EMPRES_N_ID ?>/<?= $sede->SEDE_N_ID ?>/editar">
                                 <i class="material-icons">edit</i>

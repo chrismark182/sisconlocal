@@ -53,6 +53,7 @@ class C_cliente extends CI_Controller {
         $esclient='0';
         $esproveedor='0';
         $estransportista='0';
+		$otro='0';
         $ordencompra='0';
 
         if($this->input->post('escliente')=='on'):
@@ -64,6 +65,9 @@ class C_cliente extends CI_Controller {
         if($this->input->post('estransportista')=='on'):
             $estransportista='1';
         endif;
+		if($this->input->post('otro')=='on'):
+            $otro='1'; 
+        endif;		
         if($this->input->post('ordencompra')=='on'):
             $ordencompra='1';
         endif;
@@ -82,7 +86,8 @@ class C_cliente extends CI_Controller {
                                                 . $esclient . "','"
                                                 . $ordencompra . "','"
                                                 . $esproveedor . "','"
-                                                . $estransportista . "',"
+                                                . $estransportista . "','"
+                                                . $otro . "',"
                                                 . $this->data['session']->USUARI_N_ID ;
                 
                                                 $this->M_crud->sql($sql);
@@ -102,6 +107,7 @@ class C_cliente extends CI_Controller {
         $esclient='0';
         $esproveedor='0';
         $estransportista='0';
+        $otro='0';
         $ordencompra='0';
 
         if($this->input->post('escliente')=='on'):
@@ -116,6 +122,9 @@ class C_cliente extends CI_Controller {
         if($this->input->post('ordencompra')=='on'):
             $ordencompra='1';
         endif;
+		if($this->input->post('otro')=='on'):
+            $otro='1'; 
+        endif;	
 
         if( trim($this->input->post('ndocumento'))  != '' &&
             trim($this->input->post('razon_social')) != '' &&
@@ -130,7 +139,8 @@ class C_cliente extends CI_Controller {
                                             . $esclient . "','"
                                             . $ordencompra . "','"
                                             . $esproveedor . "','"
-                                            . $estransportista . "',"
+                                            . $estransportista . "','"
+                                            . $otro . "',"
                                             .$this->data['session']->USUARI_N_ID ; 
             
             $this->M_crud->sql($sql);      

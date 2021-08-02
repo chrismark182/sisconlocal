@@ -12,7 +12,7 @@
     <form action="<?= base_url() ?>usuario/crear" method="post">
         <div class="row">
             <div class="input-field col s12 m6 l12">
-                <select name="empresa">
+                <select name="empresa" id="empresa">
                     <option value="0" disabled>Seleccionar Empresa</option>
                     <?php foreach ($empresas as $empresa): ?>
                         <option value="<?= $empresa->EMPRES_N_ID ?>"><?= $empresa->EMPRES_C_RAZON_SOCIAL ?></option>
@@ -33,7 +33,16 @@
             </div>
             <div class="input-field col s12 m6 l6">
                 <input id="username" maxlength="20" type="text" name="username" class="validate">
-                <label class="active" for="username">Nombre de Usuario</label> 
+                <label class="active" for="username">Usuario</label> 
+            </div>
+			
+			 <div class="input-field col s12 m6 l6">
+                <input id="firstname" maxlength="20" type="text" name="firstname" class="validate">
+                <label class="active" for="firstname">Nombre</label> 
+            </div>
+            <div class="input-field col s12 m6 l6">
+                <input id="lastname" maxlength="20" type="text" name="lastname" class="validate">
+                <label class="active" for="lastname">Apellido</label> 
             </div>
             <div class="input-field col s12">
                 <input class="btn-small" type="submit" value="Guardar">

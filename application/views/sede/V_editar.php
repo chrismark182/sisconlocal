@@ -21,6 +21,11 @@
                 <input id="abreviatura" maxlength="10" type="text" name="abreviatura" value="<?= $sede->SEDE_C_ABREVIATURA ?>" class="validate">
                 <label class="active" for="abreviatura">Abreviatura</label> 
             </div>
+			
+			<div class="input-field col s12 m6 l12">
+                <input id="metrajetotal" maxlength="100" type="number" step="0.01" value="<?= $sede->SEDE_C_METRAJETOTAL ?>" name="metrajetotal" class="validate" style="width:20%;float: left;" >
+                <label class="active" for="metrajetotal">Metraje Total</label> 
+            </div>
 
             <div class="input-field col s12">
                 <input class="btn-small" type="submit" value="Guardar">

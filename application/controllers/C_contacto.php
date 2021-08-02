@@ -48,7 +48,11 @@ class C_contacto extends CI_Controller {
         $tipodocumento = "Exec TIPO_DOCUMENTO_PERSONAS_LIS";        
         $this->data['tdocumentos'] = $this->M_crud->sql($tipodocumento); 
         
-        $clientes = "Exec  CLIENTE_ESCLIENTE_LIS 1,'1'";
+        $empresa=$this->data['empresa']->EMPRES_N_ID;
+        
+        //$clientes = "Exec  CLIENTE_ESCLIENTE_LIS 1,'1'";
+        
+        $clientes = "Exec  CLIENTE_ESCLIENTE_LIS ".  $empresa.",'1'";
         $this->data['clientes'] = $this->M_crud->sql($clientes); 
 
 		$this->load->view('contacto/V_nuevo',$this->data);

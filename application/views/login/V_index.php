@@ -3,6 +3,7 @@
     <br>
     <form id="form" action="<?= base_url() ?>login/login" method="post">
         <div class="row">
+			<!--
             <div class="input-field col s12">
                 <select id="empresa" name="empresa">
                     <?php if($empresas): ?>
@@ -14,12 +15,13 @@
                 </select>
                 <label>Empresa</label>
             </div>
+			-->
             <div class="input-field col s12">
-                <input id="username" type="text" name="username" class="validate">
+                <input id="username" type="text" name="username" class="validate" autocomplete="off" >
                 <label class="active" for="username">Usuario</label>
             </div>
             <div class="input-field col s12">
-                <input id="password" type="password" name="password" class="validate">
+                <input id="password" type="password" name="password" class="validate" autocomplete="off">
                 <label class="active" for="password">Contraseña</label>
             </div>
         </div>

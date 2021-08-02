@@ -1,6 +1,7 @@
 <?php 
     $fecha = new DateTime(); 
     $fechaFinal = new DateTime(); 
+	
     $fechaFinal->modify('1 year');
 ?>
 
@@ -14,7 +15,7 @@
 </nav>
 
 <div class="section container center">
-    <form action="<?= base_url() ?>acuerdo/crear" method="post">
+    <form action="<?= base_url() ?>acuerdo/crear" method="post"  enctype="multipart/form-data">
         <div class="row">
             <div class="input-field col s8">
                 <select id="cliente" name="cliente" required>
@@ -86,11 +87,28 @@
                 <label class="active" for="total">Sub Total</label> 
             </div>
 
-            <div class="input-field col s8">
+            <div class="input-field col s4">
                 <textarea id="observaciones" name="observaciones" class="materialize-textarea"></textarea>
                 <label for="observaciones">Observaciones</label>
             </div>
-            <div class="input-field col s4 m4 l4">
+			
+			<div class="input-field col s4">
+                <input id="garantia" type="number" name="garantia" class="validate" step='0.01' required>
+                <label class="active" for="garantia">Garantia</label>
+            </div>
+			 <!--<input type="hidden" id="name_file" name="foto">-->
+			<!--<div class="input-field col s2">-->
+			<div class="input-field col s4 file-field">
+				<div class="btn">
+                    <span>Adjunto</span>
+                    <input id="archivo" type="file" name="archivo">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+			</div>
+						
+            <div class="input-field col s1 m3 l3">
                 <p>
                     <label >
                         <input type="checkbox" name="facturable" />

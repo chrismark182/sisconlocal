@@ -1,14 +1,23 @@
 <?php 
     $fechaDesde = new DateTime();
-    $fechaDesde->modify('first day of this month');    
-    $fechaHasta = new DateTime();
+    $fechaDesde->modify('first day of this month'); 
+
+
+	$fechaHasta = new DateTime();
+    $fechaHasta->modify('first day of this month');
+	$intervalo = new DateInterval('P1M');
+	$fechaHasta->add($intervalo);
+	
+	//$fechaHasta = $fechaDesde2;
+   // $fechaHasta = new DateTime();
+   
 ?>
 
 <nav class="blue-grey lighten-1" style="padding: 0 1em;">
     <div class="nav-wrapper">
       <div class="col s12">
        
-        <a href="<?= base_url() ?>liq_alquiler" class="breadcrumb">Liquidación de Alquiler</a>
+        <a href="<?= base_url() ?>liq_alquiler" class="breadcrumb">Liquidación de Alquiler </a>
         <a href="#!" class="breadcrumb">Nuevo</a>
       </div>
     </div>
@@ -76,7 +85,7 @@
         <thead class="blue-grey darken-1" style="color: white">
             <tr>          
                 <th class="center-align"></th>
-                <th class="center-align">ALQUILER</th>
+                <th class="center-align">CLIENTE</th>
                 <th class="center-align">ITEM</th>
                 <th class="left-align">UBICACIÓN</th>
                 <th class="center-align">F.INICIO</th>
@@ -119,8 +128,12 @@
         var sede = document.getElementById("sede").value;
         var moneda = document.getElementById("moneda").value;
 
-            if(cliente != '' && sede != '' && moneda != '')
-            {
+		//console.log(cliente);
+		//console.log(sede);
+		//console.log(moneda);
+
+           //if(cliente != '' && sede != '' && moneda != '')
+           //{
                 $('.preloader-background').css({'display': 'block'});
                 cliente = cliente.split('-');
                 cliente = cliente[0];
@@ -157,12 +170,12 @@
                                                         <td class="center-align">
                                                             <p>
                                                                 <label>
-                                                                    <input type="checkbox" class="check" value="${element.ALQUIL_N_ID}-${element.ALQDET_N_ID}"/>
+                                                                    <input type="checkbox" class="check" value="${element.CLIENT_N_ID}-${element.SEDE_N_ID}-${element.ALQUIL_N_ID}-${element.ALQDET_N_ID}" name="liqaquiler" />
                                                                     <span></span>
                                                                 </label>
                                                             </p>
                                                         </td>
-                                                        <td class="center-align">${element.ALQUIL_N_ID}</td>
+                                                        <td class="center-align">${element.CLIENT_C_RAZON_SOCIAL}</td>
                                                         <td class="center-align">${element.ALQDET_N_ID}</td>
                                                         <td class="left-align">${element.SEDE_C_DESCRIPCION} - ${element.UBICAC_C_DESCRIPCION}</td>
                                                         <td class="center-align">${element.ALQDET_C_FECHA_INICIO}</td>
@@ -183,36 +196,89 @@
                     $('.preloader-background').css({'display': 'none'});    
 
                 });
-            }else{
-                M.toast({html: 'Debe elegir un cliente, sede y moneda', classes: 'rounded'});
-                $('.preloader-background').css({'display': 'none'});    
-            }
+            //}
+			
+			//else{
+            //    M.toast({html: 'Debe elegir un cliente, sede y moneda', classes: 'rounded'});
+            //    $('.preloader-background').css({'display': 'none'});    
+           //}
     }
 
     function liquidar()
     {
 
+		//data si es cargado por busqueda 
         var cliente = document.getElementById("cliente").value;
-            cliente = cliente.split('-');
-        
+		
+		cliente = cliente.split('-');
+			
+		
+		
+		//CODIGO PRUEBA
+		var vliqalquiler = [];
+		
+		//Recorremos todos los input checkbox con name = Colores y que se encuentren "checked"
+		$("input[name='liqaquiler']:checked").each(function ()
+		{
+		
+		//Mediante la función push agregamos al arreglo los values de los checkbox
+		vliqalquiler.push(($(this).attr("value")));
+		});
+		
+		// Utilizamos console.log para ver comprobar que en realidad contiene algo el arreglo
+		//console.log("1");
+		//console.log(vliqalquiler);
+		//vliqalquiler.length
+		//FIN CODIGO PRUEBA
+					
+					
         var situacion = 1;
         //if(cliente[1] == 1){ situacion = 0 }
-
-        var checados = $('.check:checked')
+		//situacion = 0
+		
+		
+        var checados = $('.check:checked');
+		
+		//console.log(checados);
         console.log('Checados:' + checados.length);
-        if(checados.length > 0)
-        {
+		
+       if(checados.length > 0)
+        {			
+			for (let i = 0; i < checados.length; i++)
+			{
+			
+			console.log("seleccionados" + i );
+			console.log(vliqalquiler[i]);
+			
+			valquil = vliqalquiler[i].split('-');
+			//console.log("idcliente/idsede");
+			
+			//return false;
+			//console.log(vliqalquiler[i]);
+			//var aliquid =   vliqalquiler[i];
+			
             $('.preloader-background').css({'display': 'block'});
             let url =  '<?= base_url() ?>api/execsp';
             let sp = 'LIQUIDACION_INS';
             let empresa = <?= $empresa->EMPRES_N_ID ?>;
-            let cliente_id = cliente[0];
-            let sede = document.getElementById("sede").value;
+            //let cliente_id = cliente[0];
+            let cliente_id = valquil[0];
+            //let sede = document.getElementById("sede").value;
+            let sede = valquil[1];
+			let alquiler_id = valquil[2];
+			let alquiler_item = valquil[3];
             let tipo = 'A';
             let usuario = <?= $this->data['session']->USUARI_N_ID ?>;
-
-            let data = {sp, empresa, cliente_id, sede, tipo, situacion, usuario};            
+			
+			//Solo para completar el procedure
+			let ordenser= "";
+			
+            let data = {sp, empresa, cliente_id, sede, tipo, situacion, usuario, alquiler_id, alquiler_item,ordenser };            
             
+			//console.log(i);
+			
+			
+			
             fetch(url, {
                         method: 'POST', // or 'PUT'
                         body: JSON.stringify(data), // data can be `string` or {object}!
@@ -226,58 +292,78 @@
             .then(function(data) 
             {
                 if(data.length>0){
-                    insertarDetalles(data[0].LIQCAB_N_ID, checados)    
+										
+                   //insertarDetalles(data[0].LIQCAB_N_ID, valquil)
+				   insertarDetalles(data[0].LIQCAB_N_ID, data[0].CLIENTE_N_ID,data[0].SEDE_N_ID,data[0].ALQUILER_ID,data[0].ALQUILER_ITEM)
                 }
                 else{
                     M.toast({html: 'No se encontraron resultados', classes: 'rounded'});
                 }   
-
-            });
-        }else{
+			});
+       
+	  }//fin for
+	  
+	  }else{
             M.toast({html: 'Debe elegir al menos una orden de servicio', classes: 'rounded'});
         }
     }
 
-    async function insertarDetalles(liquidacion, checados)
+    //async function insertarDetalles(liquidacion, checados)
+    async function insertarDetalles(liquidacion, cliente_n_id,sede_id,alquiler_id,alquiler_item)
     {
-        $('.preloader-background').css({'display': 'block'});
+				
+    $('.preloader-background').css({'display': 'block'});
+	
+	var situacion = 1;
         
-        var situacion = 1;
-        
-        var url =  '<?= base_url() ?>api/execsp';
-
-        for (let index = 0; index < checados.length; index++) {
-            console.log('ejecutando vuelta ' + (index+1))
-            const element = checados[index];
-            let alquiler = element.value.split('-');
+    var url =  '<?= base_url() ?>api/execsp';
+	
+       // for (let index = 0; index < checados.length; index++) {
+            //console.log('ejecutando vuelta ' + (index+1))
+            //const element = checados[index];
+			//console.log(element);
+			
+            //let alquiler = element.value.split('-');
             let sp = 'LIQUIDACION_INS_ALQUILER_DETALLE';
             let empresa = <?= $empresa->EMPRES_N_ID ?>;
-            let alquiler_id = alquiler[0];
-            let alquiler_item = alquiler[1];
-            let usuario = <?= $this->data['session']->USUARI_N_ID ?>;
-            let data = {sp, empresa, liquidacion, alquiler_id, alquiler_item, usuario};
-                    
+			let usuario = <?= $this->data['session']->USUARI_N_ID ?>;
+			
+			
+		// console.log("funcion insertardetalles");
+		// console.log(liquidacion);
+		// console.log(cliente_n_id);
+		// console.log(sede_id);
+		// console.log(alquiler_id);
+		// console.log(alquiler_item);
+		// return false;
+				
+		let data = {sp, empresa, liquidacion, alquiler_id, alquiler_item, usuario};
+           			
+			
             await fetch(url, {
-                        method: 'POST', // or 'PUT'
-                        body: JSON.stringify(data), // data can be `string` or {object}!
-                        headers:{
-                            'Content-Type': 'application/json'
-                            }
-                        })
+                       method: 'POST', // or 'PUT'
+                       body: JSON.stringify(data), // data can be `string` or {object}!
+                       headers:{
+                           'Content-Type': 'application/json'
+                           }
+                       })
             .then(function(response) {
-                return response.json();
+               return response.json();
             })
             .then(function(data) 
             {
-                console.log('terminó de ejecutar');
+               console.log('terminó de ejecutar');
 
             }).catch(function(error) {
-                console.log('Hubo un problema con la petición Fetch:' + error.message);
+               console.log('Hubo un problema con la petición Fetch:' + error.message);
             });
-        }
+        
+		
+		//}
         M.toast({html: 'Liquidación generada correctamente', classes: 'rounded'});
         $('.preloader-background').css({'display': 'none'});    
-        window.location.href = "<?= base_url() ?>liq_alquiler?li=" + liquidacion;
+        //window.location.href = "<?= base_url() ?>liq_alquiler?li=" + liquidacion;
+        window.location.href = "<?= base_url() ?>liq_alquiler";
     }
 </script>
 
